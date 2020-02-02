@@ -90,7 +90,7 @@ function Detective(moduleinst::Module)
     fns         = [ safeisfield(moduleinst, curname, Function ) for curname in allnames ]
     types       = [ safeisnotabstract(moduleinst, curname, Type ) && !(string(curname)[1] == '@') for curname in allnames]
     abstypes    = [ safeisabstract(moduleinst, curname, Type ) && !(string(curname)[1] == '@') for curname in allnames]
-    others      = (fns .+ types) .== 0
+    others      = (fns .+ types .+ abstypes) .== 0
     return Detective(   moduleinst, modname, allnames,
                         allnames[fns], allnames[types], allnames[abstypes], allnames[others],
                         graph, nv, tags, lookup )

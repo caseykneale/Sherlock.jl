@@ -4,7 +4,6 @@ using MrPhelps
 #Pkg.API.develop(Pkg.PackageSpec(name="Sherlock", path="/home/caseykneale/Desktop/Sherlock.jl/"))
 using Sherlock
 
-
 sherlock = Detective( MrPhelps )
 typetype_graph( sherlock )
 
@@ -12,6 +11,8 @@ functions(sherlock)
 types(sherlock)
 abstracttypes(sherlock)
 undefined(sherlock)
+
+inquire( sherlock, :FileIterator )
 
 #borrowed from graph recipes - will be updated
 using Plots, GraphRecipes
