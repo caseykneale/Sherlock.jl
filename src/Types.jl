@@ -1,4 +1,12 @@
-mutable struct Sherlock
+@enum ENTITY_TYPES
+    is_function         = 1
+    is_type             = 2
+    is_abstract_type    = 3
+    is_undefined        = 4
+    is_mystery          = 5
+end
+
+struct Detective
     moduleinst        ::Module
     modulename        ::Symbol
     allnames          ::Vector{Symbol}
@@ -10,6 +18,31 @@ mutable struct Sherlock
     nv                ::Int
     tag               ::Dict{Int, Symbol}
     lookup            ::Dict{Symbol, Int}
+end
+
+#Some convenience functions
+functions(d::Detective)::Vector{Symbol} = d.functions
+types(d::Detective)::Vector{Symbol} = d.types
+abstracttypes(d::Detective)::Vector{Symbol} = d.abstracttypes
+undefined(d::Detective)::Vector{Symbol} = d.undefined_exports
+
+function inquire( d::Detective, s::Union{Symbol,String} )
+    if isa(s, String)
+        s = Symbol(s)
+    end
+    typeis = nothing
+    if s in d.functions
+        typeis = is_function
+    elseif s in d.types
+        typeis = is_type
+    elseif s in d.abstracttypes
+        typeis = is_abstract_type
+    elseif s in d.undefined_exports
+        typeis = is_undefined
+    else
+        typeis = is_mystery
+    end
+    return typeis
 end
 
 function safeisfield(m::Module, s::Symbol, t::Type)
@@ -40,12 +73,12 @@ function safeisabstract(m::Module, s::Symbol, t::Type)
 end
 
 """
-    Sherlock( moduleinst::Module )
+    Detective( moduleinst::Module )
 
-Instantiate Sherlock object via a module.
+Instantiate Detective object via a module.
 
 """
-function Sherlock(moduleinst::Module)
+function Detective(moduleinst::Module)
     modname     = Symbol(moduleinst)
     allnames    = [ n for n in names( moduleinst ) ]
     nv          = length( allnames )
@@ -58,7 +91,7 @@ function Sherlock(moduleinst::Module)
     types       = [ safeisnotabstract(moduleinst, curname, Type ) && !(string(curname)[1] == '@') for curname in allnames]
     abstypes    = [ safeisabstract(moduleinst, curname, Type ) && !(string(curname)[1] == '@') for curname in allnames]
     others      = (fns .+ types) .== 0
-    return Sherlock(    moduleinst, modname, allnames,
+    return Detective(   moduleinst, modname, allnames,
                         allnames[fns], allnames[types], allnames[abstypes], allnames[others],
                         graph, nv, tags, lookup )
 end

@@ -4,7 +4,8 @@ module Sherlock
     #greet() = print("")
 
     include("Types.jl")
-    export Sherlock, safeisfield, safeisabstract, safeisnotabstract
+    export ENTITY_TYPES, Detective, functions, types, abstracttypes,
+    undefined, inquire, safeisfield, safeisabstract, safeisnotabstract
 
     include("Utilities.jl")
     export build_typetype_graph

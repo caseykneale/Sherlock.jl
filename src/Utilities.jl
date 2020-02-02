@@ -1,5 +1,4 @@
-
-function build_typetype_graph( sher::Sherlock )
+function typetype_graph( sher::Detective )
     #Dive into the types to look for type relationships
     for stype in sher.types
         thisnode = sher.lookup[stype]
@@ -10,4 +9,8 @@ function build_typetype_graph( sher::Sherlock )
             end
         end
     end
+end
+
+function functiontype_graph( sher::Detective )
+    
 end
