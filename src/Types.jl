@@ -1,4 +1,4 @@
-@enum ENTITY_TYPES
+@enum ENTITY_TYPES begin
     is_function         = 1
     is_type             = 2
     is_abstract_type    = 3
@@ -48,7 +48,7 @@ end
 function safeisfield(m::Module, s::Symbol, t::Type)
     try
         f = getfield(m, s)
-        return isa(f, t) && !isa(f, Function)
+        return isa(f, t) #&& !isa(f, Function)
     catch
         return false
     end

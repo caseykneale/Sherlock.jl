@@ -1,6 +1,5 @@
 module Sherlock
     using LightGraphs, GraphRecipes, Plots
-
     #greet() = print("")
 
     include("Types.jl")
@@ -8,6 +7,6 @@ module Sherlock
     undefined, inquire, safeisfield, safeisabstract, safeisnotabstract
 
     include("Utilities.jl")
-    export build_typetype_graph
+    export typetype_graph
 
 end # module
