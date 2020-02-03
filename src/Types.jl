@@ -2,8 +2,8 @@
     is_function         = 1
     is_type             = 2
     is_abstract_type    = 3
-    is_undefined        = 4
-    is_mystery          = 5
+    is_untyped          = 4
+    not_found           = 5
 end
 
 struct Detective
@@ -38,9 +38,9 @@ function inquire( d::Detective, s::Union{Symbol,String} )
     elseif s in d.abstracttypes
         typeis = is_abstract_type
     elseif s in d.undefined_exports
-        typeis = is_undefined
+        typeis = is_untyped
     else
-        typeis = is_mystery
+        typeis = not_found
     end
     return typeis
 end
@@ -48,25 +48,25 @@ end
 function safeisfield(m::Module, s::Symbol, t::Type)
     try
         f = getfield(m, s)
-        return isa(f, t) #&& !isa(f, Function)
+        return isa(f, t)
     catch
         return false
     end
 end
 
 function safeisnotabstract(m::Module, s::Symbol, t::Type)
-    result = safeisfield(m, s, t)
-    if (result && hasfield( typeof(getfield(m, s)), :abstract))
-        return !getfield(m, s).abstract
+    result = safeisfield( m, s, t )
+    if result && hasfield( typeof( getfield( m, s ) ), :abstract)
+        return !getfield( m, s ).abstract
     else
         return false
     end
 end
 
 function safeisabstract(m::Module, s::Symbol, t::Type)
-    result = safeisfield(m, s, t)
-    if (result && hasfield( typeof(getfield(m, s)), :abstract))
-        return getfield(m, s).abstract
+    result = safeisfield( m, s, t )
+    if result && hasfield( typeof( getfield( m, s ) ), :abstract )
+        return getfield( m, s ).abstract
     else
         return false
     end

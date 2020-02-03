@@ -4,9 +4,10 @@ module Sherlock
 
     include("Types.jl")
     export ENTITY_TYPES, Detective, functions, types, abstracttypes,
-    undefined, inquire, safeisfield, safeisabstract, safeisnotabstract
+        undefined, inquire, safeisfield, safeisabstract,
+        safeisnotabstract
 
     include("Utilities.jl")
-    export typetype_graph
+    export typetype_graph, functiontype_graph
 
 end # module

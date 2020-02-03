@@ -11,18 +11,21 @@ functions(sherlock)
 types(sherlock)
 abstracttypes(sherlock)
 undefined(sherlock)
+using LightGraphs
 
+#typetype_graph(sherlock)
+functiontype_graph(sherlock)
 inquire( sherlock, :FileIterator )
-
+inquire( sherlock, Symbol("Thunk") )
 #borrowed from graph recipes - will be updated
 using Plots, GraphRecipes
-Plots.default( size = (800, 800) )
+Plots.default( size = (1400, 1400) )
 graphplot(sherlock.graph,
-          markersize = 0.065,
+          markersize = 0.025,
           markercolor = range(colorant"lightblue", stop=colorant"lightgreen", length=sherlock.nv),
           names = [ sherlock.tag[i] for i in 1:sherlock.nv ] ,
-          fontsize = 10,
-          linecolor = :darkgrey,
-          title = "Sherlock Type Graph: $(sherlock.modulename)" )
+          fontsize = 12,
+          linecolor = :black,
+          title = "Sherlock Function to Type Graph: $(sherlock.modulename)" )
 
-#png("/home/caseykneale/Desktop/Sherlock/pics/mrphelps.png")
+png("/home/caseykneale/Desktop/Sherlock.jl/images/mrphelpsfnmaps.png")

@@ -11,6 +11,13 @@ function typetype_graph( sher::Detective )
     end
 end
 
-function functiontype_graph( sher::Detective )
-    
+function functiontype_graph( d::Detective )
+    for stype in d.types
+        thisnode = d.lookup[stype]
+        nodefield = getfield( d.moduleinst, stype )
+        for method in methodswith( getfield( d.moduleinst, stype ), d.moduleinst )
+            getfn = method.name
+            add_edge!( d.graph, thisnode, d.lookup[ Symbol( getfn ) ] )
+        end
+    end
 end
