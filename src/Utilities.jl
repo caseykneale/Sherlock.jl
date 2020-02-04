@@ -1,4 +1,4 @@
-function typetype_graph( sher::Detective )
+function typetype_edges( sher::Detective )
     #Dive into the types to look for type relationships
     for stype in sher.types
         thisnode = sher.lookup[stype]
@@ -11,11 +11,12 @@ function typetype_graph( sher::Detective )
     end
 end
 
-function functiontype_graph( d::Detective )
+function functiontype_edges( d::Detective )
     for stype in d.types
         thisnode = d.lookup[stype]
         nodefield = getfield( d.moduleinst, stype )
-        for method in methodswith( getfield( d.moduleinst, stype ), d.moduleinst )
+        #methodswith( Scheduler )
+        for method in InteractiveUtils.methodswith( getfield( d.moduleinst, stype ), d.moduleinst )
             getfn = method.name
             add_edge!( d.graph, thisnode, d.lookup[ Symbol( getfn ) ] )
         end

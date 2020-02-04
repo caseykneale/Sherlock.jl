@@ -1,6 +1,6 @@
 module Sherlock
-    using LightGraphs, GraphRecipes, Plots
-    #greet() = print("")
+    using InteractiveUtils, LightGraphs, GraphRecipes, Plots
+    greet() = print("My mind rebels at stagnation, give me problems, give me work!")
 
     include("Types.jl")
     export ENTITY_TYPES, Detective, functions, types, abstracttypes,
@@ -8,6 +8,9 @@ module Sherlock
         safeisnotabstract
 
     include("Utilities.jl")
-    export typetype_graph, functiontype_graph
+    export typetype_edges, functiontype_edges
+
+    include("Visualizations.jl")
+    export magnify
 
 end # module
