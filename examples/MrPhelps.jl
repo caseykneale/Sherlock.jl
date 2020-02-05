@@ -56,8 +56,8 @@ function make_graph( d::Detective, selected_module::Symbol,
         focus_txt       = Widgets.dropdown( vcat(types(d), functions(d)) );
         focus_frame     = vbox( hbox( pad(1em, focus_lbl), pad(1em, focus_txt), pad(1em, focus_btn) ) );
         throttle(0.05, focus_btn)
-        map!( x -> magnify( sherlock[], focus_txt[] ), graphdisplay, focus_btn)
-        return vbox( sherlockplot(d), Interact.hline(), focus_frame)
+        map!( x -> magnify( sherlock[], Symbol(focus_txt[]) ), graphdisplay, focus_btn)
+        return vbox( Interact.hline(), focus_frame, sherlockplot(d))
     else
         return "Please Choose a Module or a View..."
     end
