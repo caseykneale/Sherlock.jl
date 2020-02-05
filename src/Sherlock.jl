@@ -1,5 +1,5 @@
 module Sherlock
-    using InteractiveUtils, LightGraphs, GraphRecipes, Plots
+    using LightGraphs, GraphRecipes, Plots, InteractiveUtils
     greet() = print("My mind rebels at stagnation, give me problems, give me work!")
 
     include("Types.jl")
