@@ -8,9 +8,9 @@ module Sherlock
         safeisnotabstract
 
     include("Utilities.jl")
-    export typetype_edges, functiontype_edges
+    export pkgchildren, loaded_packages, typetype_edges, functiontype_edges
 
     include("Visualizations.jl")
-    export magnify
+    export magnify, sherlockplot
 
 end # module

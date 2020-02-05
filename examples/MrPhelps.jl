@@ -5,8 +5,8 @@ using MrPhelps
 using Sherlock
 
 sherlock = Detective( MrPhelps )
-typetype_graph(sherlock)
-functiontype_graph(sherlock)
+typetype_edges(sherlock)
+functiontype_edges(sherlock)
 
 functions(sherlock)
 types(sherlock)
@@ -19,47 +19,50 @@ Plots.default(size = (500,500))
 inquire( sherlock, :FileIterator )
 inquire( sherlock, Symbol("Thunk") )
 
-
-magnify( sherlock, :Scheduler )
-magnify( sherlock, :NodeManager )
+#magnify( sherlock, :Scheduler )
+#magnify( sherlock, :NodeManager )
 
 #borrowed from graph recipes - will be updated
-using Plots, GraphRecipes
-Plots.default( size = (1400, 1400) )
-graphplot(sherlock.graph,
-          markersize = 0.035,
-          nodeshape = :rect,
-          markercolor = range(colorant"lightblue", stop=colorant"lightgreen", length=sherlock.nv),
-          names = [ sherlock.tag[i] for i in 1:sherlock.nv ] ,
-          fontsize = 12,
-          linecolor = :black,
-          title = "Sherlock Function to Type Graph: $(sherlock.modulename)" )
+using Plots, GraphRecipes, Blink, Interact
+Plots.default( size = (800, 800) )
 
-png("/home/caseykneale/Desktop/Sherlock.jl/images/mrphelpsfnmaps.png")
+module_lbl = "Available Modules: ";
+pkgchildren2(m::Module) = filter((x) -> typeof(eval(x)) <:  Module && x ≠ :Main, names(Main,imported=true))
+available_modules = Observable( pkgchildren2( Main ) )
+module_txt = Widgets.dropdown( available_modules[] );
+module_btn = Widgets.button( "Inspect" );
+topload = hbox( pad(1em, module_lbl), pad(1em, module_txt), pad(1em, module_btn) );
 
-using RecipesBase, Plots
+types_to_functions = Widgets.toggle(true; label = "Types 🡆 Functions");
+functions_to_functions = Widgets.toggle(true; label = "Functions 🡆 Functions");
+views = hbox( pad(1em, types_to_functions), pad(1em, functions_to_functions) );
+graphdisplay = Observable{Any}( "Please Inspect a Module..." );
 
-struct Node
-    txt::String
-    x::Float64
-    y::Float64
-    fontsize::Int
-end
 
-@recipe function plot(z::Node)
-    w, h = ( 20, 20 )
-    seriestype := :shape
-    @series begin
-        color := :lightgrey
-        y := ( z.x .+ [ 0-w, w, w, 0-w ], z.y .+ [ 0-h, 0-h, 0, 0 ] .- 2 )
+# types_to_functions[]
+# functions_to_functions[]
+
+mainwindow = vbox(  topload,
+                    Interact.hline(),
+                    views,
+                    graphdisplay
+                    );
+
+sherlock = Observable(Detective(Sherlock))
+
+function make_graph( d, selected_module, types_to_fns, fns_to_fns )
+    if types_to_fns || fns_to_fns
+        d = Detective( getfield(Main, selected_module) )
+        types_to_fns    && typetype_edges(d)
+        fns_to_fns      && functiontype_edges(d)
+        return sherlockplot(d)
+    else
+        return "Please Choose a Module or a View..."
     end
 end
 
-function make_element( n::Node ; fontsize = 20)
-    plt = plot( n, legend = false )
-    annotate!( plt, n.x, n.y, text(n.txt, :black, :right, fontsize ) )
-    return plt
-end
+map!( x -> make_graph( sherlock[], module_txt[], types_to_functions[], functions_to_functions[] ),
+    graphdisplay, module_btn)
 
-z = Node("cookies", 10, 10, 20)
-make_element(z)
+w = Window( async = true )
+body!( w, mainwindow, async = true )

@@ -1,4 +1,4 @@
-function magnifye( d::Detective, s::Symbol)
+function magnify( d::Detective, s::Symbol)
     ndx = d.lookup[ s ]
     innb, outnb = inneighbors( d.graph, ndx), outneighbors( d.graph, ndx)
     subgraph = SimpleDiGraph( length( unique( vcat(innb, outnb ) ) ) + 1 )
@@ -21,4 +21,19 @@ function magnifye( d::Detective, s::Symbol)
             curvature_scalar = 0.0, nodesize = 0.03,
             names = names, nodecolor = :lightgray, color = :black,
             nodeshape = :rect, fontsize = 18 )
+end
+
+function sherlockplot(d::Detective)
+    try
+        return graphplot(d.graph,
+                  markersize = 0.035,
+                  nodeshape = :rect,
+                  markercolor = range(colorant"lightblue", stop=colorant"lightgreen", length=d.nv),
+                  names = [ d.tag[i] for i in 1:d.nv ] ,
+                  fontsize = 12,
+                  linecolor = :black,
+                  title = "Sherlock Graph: $(d.modulename)" )
+    catch
+        return "No edges/connections found..."
+    end
 end
