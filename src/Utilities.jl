@@ -1,7 +1,8 @@
+#unfortunately this explodes when run from a package? :'(
 #https://stackoverflow.com/questions/25575406/list-of-loaded-imported-packages-in-julia
-pkgchildren(m::Module) = filter((x) -> typeof(eval(x)) <:  Module && x ≠ :Main, names(Main,imported=true))
+#pkgchildren(m::Module) = filter((x) -> typeof(eval(x)) <:  Module && x ≠ :Main, names(Main,imported=true))
 
-loaded_packages() = pkgchildren(Main)
+#loaded_packages() = pkgchildren(Main)
 
 function typetype_edges( sher::Detective )
     #Dive into the types to look for type relationships
