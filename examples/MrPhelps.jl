@@ -1,4 +1,3 @@
-
 using Pkg
 #Pkg.API.develop(Pkg.PackageSpec(name="MrPhelps", path="/home/caseykneale/Desktop/Playground/MrPhelps/"))
 using MrPhelps
@@ -28,6 +27,3 @@ inquire( sherlock, Symbol("Thunk") )
 #Plots.default( size = (800, 800) )
 
 sherlock_UI()
-
-
-#getfield(Main, :Sherlock) isa Module

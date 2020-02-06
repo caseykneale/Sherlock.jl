@@ -18,7 +18,7 @@ function magnify( d::Detective, s::Symbol)
             0.5, [ (o-1)/(length(outnb)-1) for o in 1:length(outnb)] )
 
         return graphplot(subgraph, x=x, y=y,
-                curvature_scalar = 0.0, nodesize = 0.03,
+                curvature_scalar = 0.0, nodesize = 0.07,
                 names = names, nodecolor = :lightgray, color = :black,
                 nodeshape = :rect, fontsize = 10 )
     else
@@ -49,7 +49,7 @@ function sherlockplot(d::Detective)
 end
 
 function sherlock_UI()
-    module_lbl = "Modules Name: ";
+    module_lbl = "Module Name: ";
     available_modules = Observable{String}( "Sherlock" )
     module_txt = Widgets.textbox( available_modules[] );
     module_btn = Widgets.button( "Inspect" );
@@ -63,7 +63,6 @@ function sherlock_UI()
     graphdisplay = Observable{Any}("Please Inspect a Module...");
 
     mainwindow = vbox(  topload, graphdisplay );
-
     sherlock = Observable( Detective( Sherlock ) )
 
     function make_graph( d, selected_module::Symbol,
@@ -80,6 +79,7 @@ function sherlock_UI()
                 throttle(0.05, focus_btn)
                 map!( x -> vbox( Interact.hline(), focus_frame, magnify( d, Symbol(focus_txt[]) ) ),
                                 graphdisplay, focus_btn)
+
                 return vbox( Interact.hline(), focus_frame, sherlockplot(d))
             else
                 return "Please Choose a Module or a View..."
