@@ -21,11 +21,48 @@ struct Detective
 end
 
 #Some convenience functions
+"""
+    functions(d::Detective)::Vector{Symbol}
+
+Returns a list of functions of a module in a `Detective` object.
+
+"""
 functions(d::Detective)::Vector{Symbol} = d.functions
+
+"""
+    types(d::Detective)::Vector{Symbol}
+
+Returns a list of types of a module in a `Detective` object.
+
+"""
 types(d::Detective)::Vector{Symbol} = d.types
+
+"""
+    abstracttypes(d::Detective)::Vector{Symbol}
+
+Returns a list of abstract types of a module in a `Detective` object.
+
+"""
 abstracttypes(d::Detective)::Vector{Symbol} = d.abstracttypes
+
+"""
+    undefined(d::Detective)::Vector{Symbol}
+
+Returns a list of undefined objects in a module in a `Detective` object.
+This could be exported items that don't exist, or objects without explicit types,
+until compile time.
+
+"""
 undefined(d::Detective)::Vector{Symbol} = d.undefined_exports
 
+"""
+    inquire( d::Detective, s::Union{Symbol,String} )
+
+This function will search a loaded module for an instance or method of symbol `s`.
+If it finds it, it will, return an enumeration of its category. This is useful
+for quickly categorizing an item in a struct for display purposes.
+
+"""
 function inquire( d::Detective, s::Union{Symbol,String} )
     if isa(s, String)
         s = Symbol(s)
@@ -46,7 +83,7 @@ function inquire( d::Detective, s::Union{Symbol,String} )
     return typeis
 end
 
-function safeisfield(m::Module, s::Symbol, t::Type)
+function safeisfield(m::Module, s::Symbol, t::Type)::Bool
     try
         f = getfield(m, s)
         return isa(f, t)
@@ -55,7 +92,7 @@ function safeisfield(m::Module, s::Symbol, t::Type)
     end
 end
 
-function safeisnotabstract(m::Module, s::Symbol, t::Type)
+function safeisnotabstract(m::Module, s::Symbol, t::Type)::Bool
     result = safeisfield( m, s, t )
     if result && hasfield( typeof( getfield( m, s ) ), :abstract)
         return !getfield( m, s ).abstract
@@ -64,7 +101,7 @@ function safeisnotabstract(m::Module, s::Symbol, t::Type)
     end
 end
 
-function safeisabstract(m::Module, s::Symbol, t::Type)
+function safeisabstract(m::Module, s::Symbol, t::Type)::Bool
     result = safeisfield( m, s, t )
     if result && hasfield( typeof( getfield( m, s ) ), :abstract )
         return getfield( m, s ).abstract

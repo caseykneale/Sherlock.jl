@@ -16,14 +16,11 @@ undefined(sherlock)
 
 #Plots.default(size = (500,500))
 
-inquire( sherlock, :FileIterator )
-inquire( sherlock, Symbol("Thunk") )
+#inquire( sherlock, :FileIterator )
+#inquire( sherlock, Symbol("Thunk") )
 
 #magnify( sherlock, :Detective )
 #magnify( sherlock, :NodeManager )
 
-#Borrowed from graph recipes - will be updated
 #using Plots, GraphRecipes, Blink, Interact
-#Plots.default( size = (800, 800) )
-
 sherlock_UI()

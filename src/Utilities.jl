@@ -4,6 +4,15 @@
 
 #loaded_packages() = pkgchildren(Main)
 
+
+"""
+    typetype_edges( d::Detective )
+
+Discovers first order relationships between types in a package.
+It adds that information to a `Detective` instance's internal
+graph object as an inplace operation. 
+
+"""
 function typetype_edges( sher::Detective )
     #Dive into the types to look for type relationships
     for stype in sher.types
@@ -17,6 +26,14 @@ function typetype_edges( sher::Detective )
     end
 end
 
+"""
+    functiontype_edges( d::Detective )
+
+Discovers which types are called from the available functions
+in a package. It adds that information to a `Detective` instance's
+internal graph object as an inplace operation.
+
+"""
 function functiontype_edges( d::Detective )
     for stype in d.types
         thisnode = d.lookup[stype]

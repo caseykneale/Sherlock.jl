@@ -48,6 +48,14 @@ function sherlockplot(d::Detective)
     end
 end
 
+"""
+    sherlock_UI()
+
+This is a convenience function to create a Blink window which hosts an Interact
+UI. The intention of the UI is to explore a module (typed in by a user), and display
+some of the knowledge obtained about it graphically. 
+
+"""
 function sherlock_UI()
     module_lbl = "Module Name: ";
     available_modules = Observable{String}( "Sherlock" )
