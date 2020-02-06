@@ -12,9 +12,6 @@ functions(sherlock)
 types(sherlock)
 abstracttypes(sherlock)
 undefined(sherlock)
-#using LightGraphs, Plots
-
-#Plots.default(size = (500,500))
 
 #inquire( sherlock, :FileIterator )
 #inquire( sherlock, Symbol("Thunk") )

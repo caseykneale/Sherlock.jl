@@ -1,3 +1,10 @@
+"""
+    magnify( d::Detective, s::Symbol)
+
+Returns a subgraph plot of the first order interactions of a
+ given object in a `Detective` instance.
+
+"""
 function magnify( d::Detective, s::Symbol)
     if haskey(d.lookup, s)
         ndx = d.lookup[ s ]
@@ -26,6 +33,14 @@ function magnify( d::Detective, s::Symbol)
     end
 end
 
+
+"""
+    sherlockplot(d::Detective)
+
+Returns a LightGraphs plot recipe of a `Detective` instances
+internal graph.
+
+"""
 function sherlockplot(d::Detective)
     try
         colormap = Dict( is_function => :lightblue, is_type => :lightgreen,
@@ -53,7 +68,7 @@ end
 
 This is a convenience function to create a Blink window which hosts an Interact
 UI. The intention of the UI is to explore a module (typed in by a user), and display
-some of the knowledge obtained about it graphically. 
+some of the knowledge obtained about it graphically.
 
 """
 function sherlock_UI()
