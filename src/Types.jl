@@ -42,10 +42,7 @@ function inquire( d::Detective, s::Union{Symbol,String} )
     else
         typeis = not_found
     end
-
     #lookup the value
-
-
     return typeis
 end
 

@@ -20,7 +20,7 @@ function magnify( d::Detective, s::Symbol)
         return graphplot(subgraph, x=x, y=y,
                 curvature_scalar = 0.0, nodesize = 0.03,
                 names = names, nodecolor = :lightgray, color = :black,
-                nodeshape = :rect, fontsize = 18 )
+                nodeshape = :rect, fontsize = 10 )
     else
         return "Key $s not found..."
     end
@@ -28,13 +28,19 @@ end
 
 function sherlockplot(d::Detective)
     try
+        colormap = Dict( is_function => :lightblue, is_type => :lightgreen,
+                is_abstract_type => :lightred, is_untyped => :lightpurple, not_found => :grey )
+
+        [ colormap[ inquire( d, v ) ] for (k,v) in d.tag ]
+
         return graphplot(d.graph,
                 size = (1000,800),
-                  markersize = 0.05,
+                  markersize = 0.111,
                   nodeshape = :rect,
-                  markercolor = range(colorant"lightblue", stop=colorant"lightgreen", length=d.nv),
+                  markercolor = [ colormap[ inquire( d, v ) ] for (k,v) in d.tag ],
+                  #range(colorant"lightblue", stop=colorant"lightgreen", length=d.nv),
                   names = [ d.tag[i] for i in 1:d.nv ] ,
-                  fontsize = 12,
+                  fontsize = 10,
                   linecolor = :black,
                   title = "Sherlock Graph: $(d.modulename)" )
     catch
@@ -62,23 +68,26 @@ function sherlock_UI()
 
     function make_graph( d, selected_module::Symbol,
                         types_to_fns, fns_to_fns )
-        if hasfield(Main, selected_module) && (types_to_fns || fns_to_fns)
-            d = Detective( getfield(Main, selected_module) )
-            if types_to_fns; typetype_edges(d); end
-            if fns_to_fns  ; functiontype_edges(d); end
-            focus_lbl       = "Focus On: "
-            focus_btn       = Widgets.button( "Focus" );
-            focus_txt       = Widgets.dropdown( vcat(types(d), functions(d)) );
-            focus_frame     = vbox( hbox( pad(1em, focus_lbl), pad(1em, focus_txt), pad(1em, focus_btn) ) );
-            throttle(0.05, focus_btn)
-            map!( x -> vbox( Interact.hline(), focus_frame, magnify( d, Symbol(focus_txt[]) ) ),
-                            graphdisplay, focus_btn)
-            return vbox( Interact.hline(), focus_frame, sherlockplot(d))
-        else
-            return "Please Choose a Module or a View..."
+        try
+            if (types_to_fns || fns_to_fns)
+                d = Detective( getfield(Main, selected_module) )
+                if types_to_fns; typetype_edges(d); end
+                if fns_to_fns  ; functiontype_edges(d); end
+                focus_lbl       = "Focus On: "
+                focus_btn       = Widgets.button( "Focus" );
+                focus_txt       = Widgets.dropdown( vcat(types(d), functions(d)) );
+                focus_frame     = vbox( hbox( pad(1em, focus_lbl), pad(1em, focus_txt), pad(1em, focus_btn) ) );
+                throttle(0.05, focus_btn)
+                map!( x -> vbox( Interact.hline(), focus_frame, magnify( d, Symbol(focus_txt[]) ) ),
+                                graphdisplay, focus_btn)
+                return vbox( Interact.hline(), focus_frame, sherlockplot(d))
+            else
+                return "Please Choose a Module or a View..."
+            end
+        catch
+            return "Module does not exist."
         end
     end
-
     map!( x -> make_graph(sherlock[], Symbol(module_txt[]), types_to_functions[], functions_to_functions[]),
                         graphdisplay, module_btn)
 
