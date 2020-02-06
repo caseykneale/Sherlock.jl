@@ -54,7 +54,7 @@ function sherlock_UI()
     views = vbox( types_to_functions, functions_to_functions );
     topload = hbox( pad(1em, module_lbl), pad(1em, module_txt), views, pad(1em, module_btn) );
 
-    graphdisplay = "Please Inspect a Module...";
+    graphdisplay = Observable{Any}("Please Inspect a Module...");
 
     mainwindow = vbox(  topload, graphdisplay );
 
@@ -79,8 +79,8 @@ function sherlock_UI()
         end
     end
 
-    map!( x -> make_graph( sherlock[], Symbol(module_txt[]), types_to_functions[], functions_to_functions[] ),
-                            graphdisplay, module_btn)
+    map!( x -> make_graph(sherlock[], Symbol(module_txt[]), types_to_functions[], functions_to_functions[]),
+                        graphdisplay, module_btn)
 
     w = Window( async = true )
     body!( w, mainwindow, async = true )
