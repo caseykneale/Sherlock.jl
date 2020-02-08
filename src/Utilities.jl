@@ -1,16 +1,13 @@
 #unfortunately this explodes when run from a package? :'(
 #https://stackoverflow.com/questions/25575406/list-of-loaded-imported-packages-in-julia
 #pkgchildren(m::Module) = filter((x) -> typeof(eval(x)) <:  Module && x ≠ :Main, names(Main,imported=true))
-
 #loaded_packages() = pkgchildren(Main)
-
-
 """
     typetype_edges( d::Detective )
 
 Discovers first order relationships between types in a package.
 It adds that information to a `Detective` instance's internal
-graph object as an inplace operation. 
+graph object as an inplace operation.
 
 """
 function typetype_edges( sher::Detective )

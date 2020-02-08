@@ -33,7 +33,6 @@ function magnify( d::Detective, s::Symbol)
     end
 end
 
-
 """
     sherlockplot(d::Detective)
 
@@ -78,8 +77,8 @@ function sherlock_UI()
     module_btn = Widgets.button( "Inspect" );
     throttle(0.05, module_btn)
 
-    types_to_functions = Widgets.toggle(true; label = "Types 🡆 Functions");
-    functions_to_functions = Widgets.toggle(true; label = "Functions 🡆 Functions");
+    types_to_functions = Widgets.toggle(true; label = "Types → Functions");
+    functions_to_functions = Widgets.toggle(true; label = "Functions → Functions");
     views = vbox( types_to_functions, functions_to_functions );
     topload = hbox( pad(1em, module_lbl), pad(1em, module_txt), views, pad(1em, module_btn) );
 
@@ -97,7 +96,14 @@ function sherlock_UI()
                 if fns_to_fns  ; functiontype_edges(d); end
                 focus_lbl       = "Focus On: "
                 focus_btn       = Widgets.button( "Focus" );
-                focus_txt       = Widgets.dropdown( vcat(types(d), functions(d)) );
+                #get types and functions which have connections
+                ts = d.types
+                nbs = [ LightGraphs.neighbors(d.graph, d.lookup[t] ) for t in ts ]
+                ts = ts[ length.(nbs) .> 0 ]
+                fs = d.functions
+                nbs = [ LightGraphs.neighbors(d.graph, d.lookup[ f ] ) for f in fs ]
+                fs = fs[ length.(nbs) .> 0 ]
+                focus_txt       = Widgets.dropdown( vcat( ts, fs ) );
                 focus_frame     = vbox( hbox( pad(1em, focus_lbl), pad(1em, focus_txt), pad(1em, focus_btn) ) );
                 throttle(0.05, focus_btn)
                 map!( x -> vbox( Interact.hline(), focus_frame, magnify( d, Symbol(focus_txt[]) ) ),
