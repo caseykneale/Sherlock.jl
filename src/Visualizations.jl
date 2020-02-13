@@ -41,25 +41,24 @@ internal graph.
 
 """
 function sherlockplot(d::Detective)
-    try
+    #try
         colormap = Dict( is_function => :lightblue, is_type => :lightgreen,
-                is_abstract_type => :lightred, is_untyped => :lightpurple, not_found => :grey )
+                is_abstract_type => :tomato, is_untyped => :orchid1, not_found => :grey )
 
-        [ colormap[ inquire( d, v ) ] for (k,v) in d.tag ]
-
+        colors = [ colormap[ inquire( d, v ) ] for (k,v) in d.tag ]
         return graphplot(d.graph,
-                size = (1000,800),
+                  size = (1111,1111),
                   markersize = 0.111,
                   nodeshape = :rect,
-                  markercolor = [ colormap[ inquire( d, v ) ] for (k,v) in d.tag ],
-                  #range(colorant"lightblue", stop=colorant"lightgreen", length=d.nv),
+                  markercolor = colors,
                   names = [ d.tag[i] for i in 1:d.nv ] ,
                   fontsize = 10,
                   linecolor = :black,
-                  title = "Sherlock Graph: $(d.modulename)" )
-    catch
-        return "No edges/connections found..."
-    end
+                  title = "$(string(d.modulename)) Overview" )
+
+    #catch
+    #    return "No edges/connections found..."
+    #end
 end
 
 """
@@ -83,13 +82,12 @@ function sherlock_UI()
     topload = hbox( pad(1em, module_lbl), pad(1em, module_txt), views, pad(1em, module_btn) );
 
     graphdisplay = Observable{Any}("Please Inspect a Module...");
-
     mainwindow = vbox(  topload, graphdisplay );
     sherlock = Observable( Detective( Sherlock ) )
 
     function make_graph( d, selected_module::Symbol,
                         types_to_fns, fns_to_fns )
-        try
+        #try
             if (types_to_fns || fns_to_fns)
                 d = Detective( getfield(Main, selected_module) )
                 if types_to_fns; typetype_edges(d); end
@@ -108,14 +106,13 @@ function sherlock_UI()
                 throttle(0.05, focus_btn)
                 map!( x -> vbox( Interact.hline(), focus_frame, magnify( d, Symbol(focus_txt[]) ) ),
                                 graphdisplay, focus_btn)
-
                 return vbox( Interact.hline(), focus_frame, sherlockplot(d))
             else
                 return "Please Choose a Module or a View..."
             end
-        catch
-            return "Module does not exist."
-        end
+        #catch
+        #    return "Module does not exist."
+        #end
     end
     map!( x -> make_graph(sherlock[], Symbol(module_txt[]), types_to_functions[], functions_to_functions[]),
                         graphdisplay, module_btn)

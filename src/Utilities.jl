@@ -35,7 +35,6 @@ function functiontype_edges( d::Detective )
     for stype in d.types
         thisnode = d.lookup[stype]
         nodefield = getfield( d.moduleinst, stype )
-        #methodswith( Scheduler )
         for method in InteractiveUtils.methodswith( getfield( d.moduleinst, stype ), d.moduleinst )
             getfn = method.name
             add_edge!( d.graph, thisnode, d.lookup[ Symbol( getfn ) ] )
