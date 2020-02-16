@@ -1,11 +1,43 @@
 """
+    typetree( s::Symbol )
+
+Returns a subgraph type tree plot of a given type
+
+This is literally a wrapper for basic GraphRecipes functionality.
+
+"""
+function typetree(d::Detective, s::Symbol)
+    type_in = getfield( d.moduleinst, s )
+    return plot( type_in, method = :tree,
+                 nodesize = 0.07, nodecolor = :lightgray,
+                 fontsize = 10, nodeshape = :rect)
+end
+
+"""
     magnify( d::Detective, s::Symbol)
 
 Returns a subgraph plot of the first order interactions of a
  given object in a `Detective` instance.
 
 """
-function magnify( d::Detective, s::Symbol)
+function magnify( d::Detective, s::Symbol, style::Symbol)
+    if style == :MIMO
+        return MIMO(d, s)
+    elseif style == Symbol("Type Tree")
+        return typetree( d, s )
+    else#This shouldn't happen... ever...
+        @error("Plot style($style) requested, not recognized.")
+    end
+end
+
+"""
+    MIMO( d::Detective, s::Symbol)
+
+Returns a subgraph plot of the first order interactions of a
+ given object in a `Detective` instance.
+
+"""
+function MIMO( d::Detective, s::Symbol )
     if haskey(d.lookup, s)
         ndx = d.lookup[ s ]
         innb, outnb = inneighbors( d.graph, ndx), outneighbors( d.graph, ndx)
@@ -25,13 +57,14 @@ function magnify( d::Detective, s::Symbol)
             0.5, [ (o-1)/(length(outnb)-1) for o in 1:length(outnb)] )
 
         return graphplot(subgraph, x=x, y=y,
-                curvature_scalar = 0.0, nodesize = 0.07,
+                curvature_scalar = 0.05, nodesize = 0.07,
                 names = names, nodecolor = :lightgray, color = :black,
                 nodeshape = :rect, fontsize = 10 )
     else
         return "Key $s not found..."
     end
 end
+
 
 """
     sherlockplot(d::Detective)
@@ -41,13 +74,13 @@ internal graph.
 
 """
 function sherlockplot(d::Detective)
-    #try
+    try
         colormap = Dict( is_function => :lightblue, is_type => :lightgreen,
                 is_abstract_type => :tomato, is_untyped => :orchid1, not_found => :grey )
 
         colors = [ colormap[ inquire( d, v ) ] for (k,v) in d.tag ]
         return graphplot(d.graph,
-                  size = (1111,1111),
+                  size = (999,999),
                   markersize = 0.111,
                   nodeshape = :rect,
                   markercolor = colors,
@@ -56,9 +89,9 @@ function sherlockplot(d::Detective)
                   linecolor = :black,
                   title = "$(string(d.modulename)) Overview" )
 
-    #catch
-    #    return "No edges/connections found..."
-    #end
+    catch
+        return "No edges/connections found..."
+    end
 end
 
 """
@@ -87,12 +120,13 @@ function sherlock_UI()
 
     function make_graph( d, selected_module::Symbol,
                         types_to_fns, fns_to_fns )
-        #try
+        try
             if (types_to_fns || fns_to_fns)
                 d = Detective( getfield(Main, selected_module) )
                 if types_to_fns; typetype_edges(d); end
                 if fns_to_fns  ; functiontype_edges(d); end
                 focus_lbl       = "Focus On: "
+                focus_options   = radiobuttons(["MIMO", "Type Tree"])
                 focus_btn       = Widgets.button( "Focus" );
                 #get types and functions which have connections
                 ts = d.types
@@ -102,17 +136,17 @@ function sherlock_UI()
                 nbs = [ LightGraphs.neighbors(d.graph, d.lookup[ f ] ) for f in fs ]
                 fs = fs[ length.(nbs) .> 0 ]
                 focus_txt       = Widgets.dropdown( vcat( ts, fs ) );
-                focus_frame     = vbox( hbox( pad(1em, focus_lbl), pad(1em, focus_txt), pad(1em, focus_btn) ) );
+                focus_frame     = vbox( hbox( pad(1em, focus_lbl), pad(1em, focus_txt), pad(1em, focus_options), pad(1em, focus_btn) ) );
                 throttle(0.05, focus_btn)
-                map!( x -> vbox( Interact.hline(), focus_frame, magnify( d, Symbol(focus_txt[]) ) ),
+                map!( x -> vbox( Interact.hline(), focus_frame, magnify( d, Symbol(focus_txt[]), Symbol(focus_options[]) )  ),
                                 graphdisplay, focus_btn)
                 return vbox( Interact.hline(), focus_frame, sherlockplot(d))
             else
                 return "Please Choose a Module or a View..."
             end
-        #catch
-        #    return "Module does not exist."
-        #end
+        catch
+            return "Module does not exist."
+        end
     end
     map!( x -> make_graph(sherlock[], Symbol(module_txt[]), types_to_functions[], functions_to_functions[]),
                         graphdisplay, module_btn)

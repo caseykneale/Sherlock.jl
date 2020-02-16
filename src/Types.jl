@@ -6,6 +6,7 @@
     not_found           = 5
 end
 
+
 struct Detective
     moduleinst        ::Module
     modulename        ::Symbol

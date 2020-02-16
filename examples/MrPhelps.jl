@@ -8,13 +8,13 @@ using MrPhelps
 Pkg.API.develop(Pkg.PackageSpec(name="Sherlock", path="/home/caseykneale/Desktop/Sherlock.jl/"))
 using Sherlock
 
-
 d = Detective( Sherlock )
 typetype_edges(d)
 functiontype_edges(d)
 
 functions(d)
 types(d)
+
 abstracttypes(d)
 undefined(d)
 
@@ -30,3 +30,11 @@ Plots.default(size = (1000,1000))
 
 #using Plots, GraphRecipes, Blink, Interact
 sherlock_UI()
+
+using GraphRecipes, Plots, Interact
+type_in = getfield( Sherlock, :Detective )
+plot( type_in, method=:tree, fontsize=10, nodeshape=:rect)
+
+# cool = Observable{Any}([])
+# cool[] = plot( type_in, method=:tree, fontsize=10, nodeshape=:rect)
+#

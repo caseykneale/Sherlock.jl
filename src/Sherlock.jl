@@ -1,5 +1,5 @@
 module Sherlock
-    using LightGraphs, GraphRecipes, Plots, InteractiveUtils, Blink, Interact
+    using Plots, LightGraphs, GraphRecipes, InteractiveUtils, Blink, Interact
     greet() = print("My mind rebels at stagnation, give me problems, give me work!")
 
     include("Types.jl")
@@ -12,6 +12,6 @@ module Sherlock
             #pkgchildren, loaded_packages #irreprable error with these...
 
     include("Visualizations.jl")
-    export magnify, sherlockplot, sherlock_UI
+    export magnify, MIMO, typetree, sherlockplot, sherlock_UI
 
 end # module
