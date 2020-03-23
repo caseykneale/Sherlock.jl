@@ -6,7 +6,6 @@
     not_found           = 5
 end
 
-
 struct Detective
     moduleinst        ::Module
     modulename        ::Symbol
@@ -21,7 +20,6 @@ struct Detective
     lookup            ::Dict{Symbol, Int}
 end
 
-#Some convenience functions
 """
     functions(d::Detective)::Vector{Symbol}
 

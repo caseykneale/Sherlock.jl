@@ -3,9 +3,8 @@ using Pkg
 Pkg.update()
 
 using LightGraphs, GraphRecipes, Plots
-Pkg.API.develop(Pkg.PackageSpec(name="MrPhelps", path="/home/caseykneale/Desktop/Playground/MrPhelps/"))
-using MrPhelps
-Pkg.API.develop(Pkg.PackageSpec(name="Sherlock", path="/home/caseykneale/Desktop/Sherlock.jl/"))
+#Pkg.API.develop(Pkg.PackageSpec(name="MrPhelps", path="/home/caseykneale/Desktop/Playground/MrPhelps/"))
+Pkg.API.develop(Pkg.PackageSpec(name="Sherlock", path="/home/caseykneale/.julia/dev/Sherlock"))
 using Sherlock
 
 d = Detective( Sherlock )
@@ -33,7 +32,8 @@ sherlock_UI()
 
 using GraphRecipes, Plots, Interact
 type_in = getfield( Sherlock, :Detective )
-plot( type_in, method=:tree, fontsize=10, nodeshape=:rect)
+plot( type_in, method=:tree, fontsize=10, nodeshape=:rect,
+    nodesize = 0.07, nodecolor = :lightgray, color = :black )
 
 # cool = Observable{Any}([])
 # cool[] = plot( type_in, method=:tree, fontsize=10, nodeshape=:rect)

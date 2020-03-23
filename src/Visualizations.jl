@@ -8,7 +8,7 @@ This is literally a wrapper for basic GraphRecipes functionality.
 """
 function typetree(d::Detective, s::Symbol)
     type_in = getfield( d.moduleinst, s )
-    return plot( type_in, method = :tree,
+    return plot( type_in, method = :tree,color = :black,
                  nodesize = 0.07, nodecolor = :lightgray,
                  fontsize = 10, nodeshape = :rect)
 end
