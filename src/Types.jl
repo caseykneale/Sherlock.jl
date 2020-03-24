@@ -84,30 +84,22 @@ end
 
 function safeisfield(m::Module, s::Symbol, t::Type)::Bool
     try
-        f = getfield(m, s)
-        return isa(f, t)
+        return isa( getfield(m, s) , t)
     catch
         return false
     end
+    return false
 end
 
 function safeisnotabstract(m::Module, s::Symbol, t::Type)::Bool
-    result = safeisfield( m, s, t )
-    if result && hasfield( typeof( getfield( m, s ) ), :abstract)
-        return !getfield( m, s ).abstract
-    else
-        return false
-    end
+    return safeisfield( m, s, t ) && !isabstracttype( getfield( m, s ) )
 end
 
 function safeisabstract(m::Module, s::Symbol, t::Type)::Bool
-    result = safeisfield( m, s, t )
-    if result && hasfield( typeof( getfield( m, s ) ), :abstract )
-        return getfield( m, s ).abstract
-    else
-        return false
-    end
+    return safeisfield( m, s, t ) && isabstracttype( getfield( m, s ) )
 end
+
+ismacro(s::Symbol) = first( string( s ) ) == '@'
 
 """
     Detective( moduleinst::Module )
@@ -125,8 +117,11 @@ function Detective(moduleinst::Module)
     #remove package name from list
     allnames    = allnames[ allnames .!= modname ]
     fns         = [ safeisfield(moduleinst, curname, Function ) for curname in allnames ]
-    types       = [ safeisnotabstract(moduleinst, curname, Type ) && !(string(curname)[1] == '@') for curname in allnames]
-    abstypes    = [ safeisabstract(moduleinst, curname, Type ) && !(string(curname)[1] == '@') for curname in allnames]
+    types       = [ safeisnotabstract(moduleinst, curname, Type ) && !ismacro(curname) for curname in allnames]
+    abstypes    = [ safeisabstract(moduleinst, curname, Type ) && !ismacro(curname) for curname in allnames]
+    #types       = ( .!abstypes ) .& types
+    #types       = [ !isabstracttype(getfield(moduleinst, curname ) && !(string(curname)[1] == '@') for curname in allnames]
+    #abstypes    = [ isabstracttype(getfield(moduleinst, curname )) && !(string(curname)[1] == '@') for curname in allnames]
     others      = (fns .+ types .+ abstypes) .== 0
     return Detective(   moduleinst, modname, allnames,
                         allnames[fns], allnames[types], allnames[abstypes], allnames[others],
