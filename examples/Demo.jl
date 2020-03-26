@@ -1,8 +1,9 @@
 using Pkg
-#Pkg.API.develop(Pkg.PackageSpec(name="MrPhelps", path="/home/caseykneale/Desktop/Playground/MrPhelps/"))
 #Pkg.API.develop(Pkg.PackageSpec(name="Sherlock", path="/home/caseykneale/.julia/dev/Sherlock"))
+
 using Sherlock
 using MonteCarloMeasurements
+Pkg.add("Simple")
 using SimpleWeightedGraphs
 
 d = Detective( MonteCarloMeasurements )
@@ -25,6 +26,8 @@ Plots.default(size = (1000,1000))
 #magnify( d, :NodeManager )
 #using Plots, GraphRecipes, Blink, Interact
 sherlock_UI()
+
+
 
 using GraphRecipes, Plots, Interact
 type_in = getfield( Sherlock, :Detective )

@@ -242,12 +242,6 @@ version = "0.14.0"
 [[LibGit2]]
 uuid = "76f85450-5226-5b5a-8eaa-529ad045b433"
 
-[[LibSerialPort]]
-deps = ["Libdl", "libserialport_jll"]
-git-tree-sha1 = "14bd5bdd156c834e82b52beca912dffe48e2455f"
-uuid = "a05a14c7-6e3b-5ba9-90a2-45558833e1df"
-version = "0.3.0"
-
 [[LibVPX_jll]]
 deps = ["Libdl", "Pkg"]
 git-tree-sha1 = "e3549ca9bf35feb9d9d954f4c6a9032e92f46e7c"
@@ -553,12 +547,6 @@ deps = ["Libdl", "Pkg"]
 git-tree-sha1 = "0e4ace600c20714a8dd67700c4502714d8473e8e"
 uuid = "f638f0a6-7fb0-5443-88ba-1cc74229b280"
 version = "0.1.6+1"
-
-[[libserialport_jll]]
-deps = ["Libdl", "Pkg"]
-git-tree-sha1 = "85ba6db81c67019fd6cab39faae970930fbc54fb"
-uuid = "220460dc-b50e-5ed0-8176-09b0fd261e90"
-version = "0.1.1+1"
 
 [[libvorbis_jll]]
 deps = ["Libdl", "Ogg_jll", "Pkg"]

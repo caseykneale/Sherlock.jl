@@ -41,25 +41,29 @@ function MIMO( d::Detective, s::Symbol )
     if haskey(d.lookup, s)
         ndx = d.lookup[ s ]
         innb, outnb = inneighbors( d.graph, ndx), outneighbors( d.graph, ndx)
-        subgraph = SimpleDiGraph( length( unique( vcat(innb, outnb ) ) ) + 1 )
+        if ( length( innb ) + length(outnb) ) > 0
+            subgraph = SimpleDiGraph( length( unique( vcat(innb, outnb ) ) ) + 1 )
 
-        for (nb, v) in enumerate( innb )
-            add_edge!(subgraph, nb, length( innb ) + 1)
-        end
-        for (nb, v) in enumerate( outnb )
-            add_edge!(subgraph, length( innb ) + 1, length( innb ) + 1 + nb)
-        end
-        names = vcat( [ d.tag[ i ] for i in innb],
-                     s, [ d.tag[ o ] for o in outnb] )
-        x = vcat( [ 0.0 for i in 1:length(innb)],
-                0.5, [ 1.0 for o in 1:length(outnb)] )
-        y = vcat( [ (i-1)/(length(innb)-1) for i in 1:length(innb)],
-            0.5, [ (o-1)/(length(outnb)-1) for o in 1:length(outnb)] )
+            for (nb, v) in enumerate( innb )
+                add_edge!(subgraph, nb, length( innb ) + 1)
+            end
+            for (nb, v) in enumerate( outnb )
+                add_edge!(subgraph, length( innb ) + 1, length( innb ) + 1 + nb)
+            end
+            names = vcat( [ d.tag[ i ] for i in innb],
+                         s, [ d.tag[ o ] for o in outnb] )
+            x = vcat( [ 0.0 for i in 1:length(innb)],
+                    0.5, [ 1.0 for o in 1:length(outnb)] )
+            y = vcat( [ (i-1)/(length(innb)-1) for i in 1:length(innb)],
+                0.5, [ (o-1)/(length(outnb)-1) for o in 1:length(outnb)] )
 
-        return graphplot(subgraph, x=x, y=y,
-                curvature_scalar = 0.05, nodesize = 0.07,
-                names = names, nodecolor = :lightgray, color = :black,
-                nodeshape = :rect, fontsize = 10 )
+            return graphplot(subgraph, x=x, y=y,
+                    curvature_scalar = 0.05, nodesize = 0.07,
+                    names = names, nodecolor = :lightgray, color = :black,
+                    nodeshape = :rect, fontsize = 10 )
+        else
+            return "Selected item has no found connections..."
+        end
     else
         return "Key $s not found..."
     end
@@ -107,10 +111,9 @@ function sherlock_UI()
     available_modules = Observable{String}( "Sherlock" )
     module_txt = Widgets.textbox( available_modules[] );
     module_btn = Widgets.button( "Inspect" );
-    throttle(0.05, module_btn)
-
-    types_to_functions = Widgets.toggle(true; label = "Types → Functions");
-    functions_to_functions = Widgets.toggle(true; label = "Functions → Functions");
+    #throttle(0.05, module_btn)
+    types_to_functions = Widgets.toggle(true; label = "Types -> Functions");
+    functions_to_functions = Widgets.toggle(true; label = "Functions -> Functions");
     views = vbox( types_to_functions, functions_to_functions );
     topload = hbox( pad(1em, module_lbl), pad(1em, module_txt), views, pad(1em, module_btn) );
 
@@ -129,15 +132,15 @@ function sherlock_UI()
                 focus_options   = radiobuttons(["MIMO", "Type Tree"])
                 focus_btn       = Widgets.button( "Focus" );
                 #get types and functions which have connections
-                ts = d.types
-                nbs = [ LightGraphs.neighbors(d.graph, d.lookup[t] ) for t in ts ]
-                ts = ts[ length.(nbs) .> 0 ]
+                ts = vcat( d.types, d.abstracttypes )
+                #nbs = [ LightGraphs.neighbors(d.graph, d.lookup[t] ) for t in ts ]
+                #ts = ts[ length.(nbs) .> 0 ]
                 fs = d.functions
                 nbs = [ LightGraphs.neighbors(d.graph, d.lookup[ f ] ) for f in fs ]
                 fs = fs[ length.(nbs) .> 0 ]
                 focus_txt       = Widgets.dropdown( vcat( ts, fs ) );
                 focus_frame     = vbox( hbox( pad(1em, focus_lbl), pad(1em, focus_txt), pad(1em, focus_options), pad(1em, focus_btn) ) );
-                throttle(0.05, focus_btn)
+                #throttle(0.05, focus_btn)
                 map!( x -> vbox( Interact.hline(), focus_frame, magnify( d, Symbol(focus_txt[]), Symbol(focus_options[]) )  ),
                                 graphdisplay, focus_btn)
                 return vbox( Interact.hline(), focus_frame, sherlockplot(d))
