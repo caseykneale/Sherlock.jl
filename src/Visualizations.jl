@@ -79,7 +79,7 @@ internal graph.
 """
 function sherlockplot(d::Detective)
     try
-        l = @layout [a{0.075h} ; b ]
+        l = @layout [a{0.05h} ; b ]
 
         p1 = scatter( [ 0,1,2,3,4 ],[ 0,0,0,0,0 ], markershape = :rect,
                     xlim = [ -1.65, 5.65 ], ylim = [ -0.01, 0.01 ],
@@ -127,7 +127,7 @@ function sherlock_UI()
     views = vbox( types_to_functions, functions_to_functions );
     topload = hbox( pad(1em, module_lbl), pad(1em, module_txt), views, pad(1em, module_btn) );
 
-    graphdisplay = Observable{Any}( plot( [0.0],[0.0], color = :white, border = :none, 
+    graphdisplay = Observable{Any}( plot( [0.0],[0.0], color = :white, border = :none,
                                         legend = false, axis = nothing, ticks = nothing,
                                         title = "Please Inspect a Module that is Loaded into Scope...") );
     mainwindow = vbox( topload, graphdisplay );

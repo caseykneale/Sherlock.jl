@@ -11,31 +11,32 @@ The goal for Sherlock is to make it easy to create design document charts, and i
 
 This was started because someone wanted some design document things from another project. So, rather then go through that drudgery it seemed most appropriate to make a tool that let's people do this for everyone - easily.
 
-Right now there's only a little functionality to this package. You can use either a WebUI or the command line
+Right now there's only a little functionality to this package, but maybe it will grow to suit other needs later. You can use either a WebUI or the command line
 
+## WebUI
 ```Julia
 using Sherlock
 sherlock_UI()
 ```
 ![image](https://raw.githubusercontent.com/caseykneale/Sherlock.jl/master/images/webui.png)
 
-
+## CLI/REPL
 ```Julia
 using LightGraphs, GraphRecipes, Plots
 using Sherlock
 
 d = Detective( Sherlock )
+#what's connected to what
 typetype_edges(d)
 functiontype_edges(d)
-
+#what types are in this module?
 functions(d)
 types(d)
-
 abstracttypes(d)
 undefined(d)
-
+#plot a normal sherlock overview plot
 sherlockplot(d)
-
+#Zoom in on a specifc item in the detective instance
 magnify( d, :Detective )
 ```
 
