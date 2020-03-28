@@ -67,10 +67,10 @@ function inquire( d::Detective, s::Union{Symbol,String} )
         s = Symbol(s)
     end
     typeis = nothing
-    if s in d.functions
-        typeis = is_function
-    elseif s in d.types
+    if s in d.types
         typeis = is_type
+    elseif s in d.functions
+        typeis = is_function
     elseif s in d.abstracttypes
         typeis = is_abstract_type
     elseif s in d.undefined_exports
@@ -88,7 +88,6 @@ function safeisfield(m::Module, s::Symbol, t::Type)::Bool
     catch
         return false
     end
-    return false
 end
 
 function safeisnotabstract(m::Module, s::Symbol, t::Type)::Bool
@@ -118,10 +117,9 @@ function Detective(moduleinst::Module)
     allnames    = allnames[ allnames .!= modname ]
     fns         = [ safeisfield(moduleinst, curname, Function ) for curname in allnames ]
     types       = [ safeisnotabstract(moduleinst, curname, Type ) && !ismacro(curname) for curname in allnames]
+    #remove constructors from functions?
+    fns[fns .& types ] .= false
     abstypes    = [ safeisabstract(moduleinst, curname, Type ) && !ismacro(curname) for curname in allnames]
-    #types       = ( .!abstypes ) .& types
-    #types       = [ !isabstracttype(getfield(moduleinst, curname ) && !(string(curname)[1] == '@') for curname in allnames]
-    #abstypes    = [ isabstracttype(getfield(moduleinst, curname )) && !(string(curname)[1] == '@') for curname in allnames]
     others      = (fns .+ types .+ abstypes) .== 0
     return Detective(   moduleinst, modname, allnames,
                         allnames[fns], allnames[types], allnames[abstypes], allnames[others],

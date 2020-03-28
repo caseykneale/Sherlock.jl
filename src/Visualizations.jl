@@ -99,8 +99,9 @@ function sherlockplot(d::Detective)
                 is_abstract_type => :tomato, is_untyped => :orchid1, not_found => :grey )
 
         colors = [ colormap[ inquire( d, v ) ] for (k,v) in d.tag ]
+        colororder = sortperm([ k for (k,_) in d.tag ])
         p2 = graphplot(d.graph, size = (999,999), markersize = 0.111,
-                  nodeshape = :rect, markercolor = colors,
+                  nodeshape = :rect, markercolor = colors[colororder],
                   names = [ d.tag[i] for i in 1:d.nv ] ,
                   fontsize = 10, linecolor = :black )
         return plot( p1, p2, layout = l )

@@ -8,7 +8,7 @@ using MonteCarloMeasurements
 #Pkg.add("Simple")
 #using SimpleWeightedGraphs
 
-d = Detective( MonteCarloMeasurements )
+d = Detective( Sherlock )
 typetype_edges( d )
 functiontype_edges( d )
 
@@ -19,7 +19,12 @@ undefined( d )
 
 #sherlockplot(d)
 #Plots.default(size = (1000,1000))
-#inquire( d, :FileIterator )
+inquire( d, :Detective )
+
+colors = [ k => (v, inquire( d, v ))  for (k,v) in d.tag ]
+d.tag
+d.graph
+
 #inquire( d, Symbol("Thunk") )
 #magnify( d, :Detective )
 #magnify( d, :NodeManager )
