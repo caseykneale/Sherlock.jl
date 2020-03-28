@@ -79,20 +79,31 @@ internal graph.
 """
 function sherlockplot(d::Detective)
     try
+        l = @layout [a{0.075h} ; b ]
+
+        p1 = scatter( [ 0,1,2,3,4 ],[ 0,0,0,0,0 ], markershape = :rect,
+                    xlim = [ -1.65, 5.65 ], ylim = [ -0.01, 0.01 ],
+                    legend = false, axis = nothing, ticks = nothing,
+                    markerstrokecolor = :white,
+                    border = :none, markersize = 45, size = (999,70),
+                    markercolor = [ :lightblue, :lightgreen, :tomato,
+                                    :orchid1, :grey],
+                    title = "$(string(d.modulename)) Overview");
+        annotate!(p1, [0.0], [0.00], "Function" );
+        annotate!(p1, [1.0], [0.00], "Type"     );
+        annotate!(p1, [2.0], [0.00], "Abstract" );
+        annotate!(p1, [3.0], [0.00], "Dynamic"  );
+        annotate!(p1, [4.0], [0.00], "Unknown"  );
+
         colormap = Dict( is_function => :lightblue, is_type => :lightgreen,
                 is_abstract_type => :tomato, is_untyped => :orchid1, not_found => :grey )
 
         colors = [ colormap[ inquire( d, v ) ] for (k,v) in d.tag ]
-        return graphplot(d.graph,
-                  size = (999,999),
-                  markersize = 0.111,
-                  nodeshape = :rect,
-                  markercolor = colors,
+        p2 = graphplot(d.graph, size = (999,999), markersize = 0.111,
+                  nodeshape = :rect, markercolor = colors,
                   names = [ d.tag[i] for i in 1:d.nv ] ,
-                  fontsize = 10,
-                  linecolor = :black,
-                  title = "$(string(d.modulename)) Overview" )
-
+                  fontsize = 10, linecolor = :black )
+        return plot( p1, p2, layout = l )
     catch
         return "No edges/connections found..."
     end
@@ -111,14 +122,15 @@ function sherlock_UI()
     available_modules = Observable{String}( "Sherlock" )
     module_txt = Widgets.textbox( available_modules[] );
     module_btn = Widgets.button( "Inspect" );
-    #throttle(0.05, module_btn)
     types_to_functions = Widgets.toggle(true; label = "Types -> Functions");
     functions_to_functions = Widgets.toggle(true; label = "Functions -> Functions");
     views = vbox( types_to_functions, functions_to_functions );
     topload = hbox( pad(1em, module_lbl), pad(1em, module_txt), views, pad(1em, module_btn) );
 
-    graphdisplay = Observable{Any}("Please Inspect a Module...");
-    mainwindow = vbox(  topload, graphdisplay );
+    graphdisplay = Observable{Any}( plot( [0.0],[0.0], color = :white, border = :none, 
+                                        legend = false, axis = nothing, ticks = nothing,
+                                        title = "Please Inspect a Module that is Loaded into Scope...") );
+    mainwindow = vbox( topload, graphdisplay );
     sherlock = Observable( Detective( Sherlock ) )
 
     function make_graph( d, selected_module::Symbol,
@@ -133,17 +145,14 @@ function sherlock_UI()
                 focus_btn       = Widgets.button( "Focus" );
                 #get types and functions which have connections
                 ts = vcat( d.types, d.abstracttypes )
-                #nbs = [ LightGraphs.neighbors(d.graph, d.lookup[t] ) for t in ts ]
-                #ts = ts[ length.(nbs) .> 0 ]
                 fs = d.functions
                 nbs = [ LightGraphs.neighbors(d.graph, d.lookup[ f ] ) for f in fs ]
                 fs = fs[ length.(nbs) .> 0 ]
                 focus_txt       = Widgets.dropdown( vcat( ts, fs ) );
                 focus_frame     = vbox( hbox( pad(1em, focus_lbl), pad(1em, focus_txt), pad(1em, focus_options), pad(1em, focus_btn) ) );
-                #throttle(0.05, focus_btn)
                 map!( x -> vbox( Interact.hline(), focus_frame, magnify( d, Symbol(focus_txt[]), Symbol(focus_options[]) )  ),
-                                graphdisplay, focus_btn)
-                return vbox( Interact.hline(), focus_frame, sherlockplot(d))
+                                graphdisplay, focus_btn )
+                return vbox( Interact.hline(), focus_frame, sherlockplot( d ) )
             else
                 return "Please Choose a Module or a View..."
             end
