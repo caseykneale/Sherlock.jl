@@ -62,7 +62,7 @@ If it finds it, it will, return an enumeration of its category. This is useful
 for quickly categorizing an item in a struct for display purposes.
 
 """
-function inquire( d::Detective, s::Union{Symbol,String} )
+function inquire( d::Detective, s::Union{Symbol,String} )::Union{Nothing, ENTITY_TYPES}
     if isa(s, String)
         s = Symbol(s)
     end
@@ -78,7 +78,6 @@ function inquire( d::Detective, s::Union{Symbol,String} )
     else
         typeis = not_found
     end
-    #lookup the value
     return typeis
 end
 

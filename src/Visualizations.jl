@@ -25,7 +25,7 @@ function magnify( d::Detective, s::Symbol, style::Symbol)
         return MIMO(d, s)
     elseif style == Symbol("Type Tree")
         return typetree( d, s )
-    else#This shouldn't happen... ever...
+    else #This shouldn't happen... ever...
         @error("Plot style($style) requested, not recognized.")
     end
 end
@@ -58,7 +58,7 @@ function MIMO( d::Detective, s::Symbol )
                 0.5, [ (o-1)/(length(outnb)-1) for o in 1:length(outnb)] )
 
             return graphplot(subgraph, x=x, y=y,
-                    curvature_scalar = 0.05, nodesize = 0.07,
+                    curvature_scalar = 0.05, nodesize = 0.08,
                     names = names, nodecolor = :lightgray, color = :black,
                     nodeshape = :rect, fontsize = 10 )
         else
@@ -69,12 +69,10 @@ function MIMO( d::Detective, s::Symbol )
     end
 end
 
-
 """
     sherlockplot(d::Detective)
 
-Returns a LightGraphs plot recipe of a `Detective` instances
-internal graph.
+Returns a LightGraphs plot recipe of a `Detective` instances internal graph.
 
 """
 function sherlockplot(d::Detective)
@@ -158,7 +156,7 @@ function sherlock_UI()
                 return "Please Choose a Module or a View..."
             end
         catch
-            return "Module does not exist."
+            return "Module not found, does not exist, or serious error occurred!"
         end
     end
     map!( x -> make_graph(sherlock[], Symbol(module_txt[]), types_to_functions[], functions_to_functions[]),
