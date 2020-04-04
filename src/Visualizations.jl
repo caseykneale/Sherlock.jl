@@ -128,12 +128,11 @@ function sherlock_UI()
 
     graphdisplay = Observable{Any}( plot( [0.0],[0.0], color = :white, border = :none,
                                         legend = false, axis = nothing, ticks = nothing,
-                                        title = "Please Inspect a Module that is Loaded into Scope...") );
+                                        title = "Please Inspect a Module that is Loaded into Scope. \n Inspection may require 30s for the first run.") );
     mainwindow = vbox( topload, graphdisplay );
     sherlock = Observable( Detective( Sherlock ) )
-
-    function make_graph( d, selected_module::Symbol,
-                        types_to_fns, fns_to_fns )
+    
+    function make_graph( d, selected_module::Symbol, types_to_fns, fns_to_fns )
         try
             if (types_to_fns || fns_to_fns)
                 d = Detective( getfield(Main, selected_module) )

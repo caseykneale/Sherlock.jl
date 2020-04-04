@@ -6,21 +6,27 @@
 [![Codecov](https://codecov.io/gh/caseykneale/Sherlock.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/caseykneale/Sherlock.jl)
 [![Build Status](https://api.cirrus-ci.com/github/caseykneale/Sherlock.jl.svg)](https://cirrus-ci.com/github/caseykneale/Sherlock.jl)
 
-### Overview
-The goal for Sherlock is to make it easy to create design document charts, and interrogate packages from a "high level" either visually or programmatically (from the REPL, or whatever). The current state of the code is somewhere between "hot mess" and "early sunday morning hacking away". So, feel free to contribute, or clean things up, or whatever you want.
+## Overview
+The goal for Sherlock is to make it easy to create design document charts, and interrogate packages from a "high level" either visually or programmaticly (from the REPL, or whatever). This was started because someone wanted some design document things from another project. So, rather then go through that drudgery it seemed most appropriate to make a tool that let's people do this for everyone - easily.
 
-This was started because someone wanted some design document things from another project. So, rather then go through that drudgery it seemed most appropriate to make a tool that let's people do this for everyone - easily.
+### Whats displayed?
+ - Types, Abstract Types, Functions, Dynamically Typed items, and Undefined exports are all displayed.
+ - First order connections between these items are all visible and stored in a Graph structure backend.
+ - Second or higher order connectivity is not currently guaranteed. (IE: the relationship between `ConcreteType` and `AbstractType2` in the following example: `ConcreteType <: AbstractType1{AbstractType2}`, will not be displayed except maybe in the `TypeTree` plot ).
+ - Macros are also not displayed because these puppies dynamically generate code, that's just out of the scope of this project for now.
+ - Types which do not belong directly to an inspected Module are also not displayed. Think of how confusing that could be?
 
-Right now there's only a little functionality to this package, but maybe it will grow to suit other needs later. You can use either a WebUI or the command line
 
-## WebUI
+There are 2 options for displaying the visualizations herein: the WebUI or the command line.
+
+### WebUI
 ```Julia
 using Sherlock
 sherlock_UI()
 ```
 ![image](https://raw.githubusercontent.com/caseykneale/Sherlock.jl/master/images/webui.png)
 
-## CLI/REPL
+### CLI/REPL
 ```Julia
 using LightGraphs, GraphRecipes, Plots
 using Sherlock
@@ -40,4 +46,4 @@ sherlockplot(d)
 magnify( d, :Detective )
 ```
 
-That's about really all there is too this for now. Please file bug reports, make PR's and suggestions.
+The current state of the code is somewhere between "hot mess" and "early Sunday morning hacking away". If anyone would like to contribute to making this package either more robust, more information rich, or more clean I'd really appreciate it!

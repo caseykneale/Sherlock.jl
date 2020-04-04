@@ -97,6 +97,12 @@ function safeisabstract(m::Module, s::Symbol, t::Type)::Bool
     return safeisfield( m, s, t ) && isabstracttype( getfield( m, s ) )
 end
 
+"""
+    ismacro(s::Symbol)
+
+checks the first character of an input symbol to see if it contains a `@` or not.
+
+"""
 ismacro(s::Symbol) = first( string( s ) ) == '@'
 
 """

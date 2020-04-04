@@ -1,3 +1,10 @@
+"""
+    nothing_is_val( x::Union{Nothing,Int}, val = Inf )
+
+if `x` is a type nothing return the alternative, `val` param. Otherwise returns x.
+Note: this is specifically used for `findfirst()` failures internally.
+
+"""
 nothing_is_val( x::Union{Nothing,Int}, val = Inf ) = isnothing(x) ? val : x
 
 """
