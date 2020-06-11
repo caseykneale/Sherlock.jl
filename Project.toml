@@ -17,7 +17,7 @@ Blink = "0.12"
 GraphRecipes = "0.5"
 Interact = "0.10"
 LightGraphs = "1.3"
-Plots = "0.29"
+Plots = "0.29, 1.4"
 RecipesBase = "0.8"
 julia = "^1"
 
