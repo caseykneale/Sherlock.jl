@@ -1,4 +1,10 @@
 """
+    greet()
+Print `"My mind rebels at stagnation, give me problems, give me work!"`.
+"""
+greet() = println("My mind rebels at stagnation, give me problems, give me work!")
+
+"""
     nothing_is_val( x::Union{Nothing,Int}, val = Inf )
 
 if `x` is a type nothing return the alternative, `val` param. Otherwise returns x.
