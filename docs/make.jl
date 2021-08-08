@@ -1,8 +1,9 @@
 using Documenter, Sherlock
 
 makedocs(;
-    modules=[Sherlock],
-    format=Documenter.HTML(),
+    format = Documenter.HTML(
+        prettyurls = get(ENV, "CI", nothing) == "true"
+    ),
     pages=[
         "Home" => "index.md",
     ],
@@ -13,5 +14,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/caseykneale/Sherlock.jl",
+    repo="github.com/caseykneale/Sherlock.jl.git",
+    devbranch = "master",
 )
