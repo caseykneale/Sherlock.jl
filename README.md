@@ -1,7 +1,8 @@
 # Sherlock
-
+<!--- 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://caseykneale.github.io/Sherlock.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://caseykneale.github.io/Sherlock.jl/dev)
+--->
 [![Build Status](https://github.com/caseykneale/Sherlock.jl/workflows/CI/badge.svg)](https://github.com/caseykneale/Sherlock.jl/actions)
 [![codecov](https://codecov.io/gh/caseykneale/Sherlock.jl/branch/master/graph/badge.svg?token=ZPRP2ry4rY)](https://codecov.io/gh/caseykneale/Sherlock.jl)
 
