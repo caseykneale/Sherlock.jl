@@ -87,7 +87,7 @@ end
 """
     sherlockplot(d::Detective)
 
-Returns a LightGraphs plot recipe of a `Detective` instances internal graph.
+Returns a Graphs plot recipe of a `Detective` instances internal graph.
 
 """
 function sherlockplot(d::Detective)
@@ -153,6 +153,12 @@ some of the knowledge obtained about it graphically.
 function sherlock_UI()
     module_lbl = "Module Name: "
     available_modules = Observable{String}("Sherlock")
+    obs_func = on(available_modules) do val
+        println("Got an update: ", val)
+    end
+
+    # @show available_modules available_modules[]
+
     module_txt = Widgets.textbox(available_modules[])
     module_btn = Widgets.button("Inspect")
     types_to_functions = Widgets.toggle(true; label="Types -> Functions")
@@ -178,6 +184,9 @@ function sherlock_UI()
     function make_graph(d, selected_module::Symbol, types_to_fns, fns_to_fns)
         try
             if (types_to_fns || fns_to_fns)
+                if selected_module == Symbol("")
+                    selected_module = :Sherlock
+                end
                 d = Detective(getfield(Main, selected_module))
                 if types_to_fns
                     typetype_edges(d)
@@ -191,7 +200,7 @@ function sherlock_UI()
                 #get types and functions which have connections
                 ts = vcat(d.types, d.abstracttypes)
                 fs = d.functions
-                nbs = [LightGraphs.neighbors(d.graph, d.lookup[f]) for f in fs]
+                nbs = [Graphs.neighbors(d.graph, d.lookup[f]) for f in fs]
                 fs = fs[length.(nbs) .> 0]
                 focus_txt = Widgets.dropdown(vcat(ts, fs))
                 focus_frame = vbox(
@@ -215,7 +224,8 @@ function sherlock_UI()
             else
                 return "Please Choose a Module or a View..."
             end
-        catch
+        catch e
+            @info e
             return "Module not found, does not exist, or serious error occurred!"
         end
     end
