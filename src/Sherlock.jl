@@ -5,7 +5,7 @@ using Blink
 using GraphRecipes
 using Interact
 using InteractiveUtils
-using LightGraphs
+using Graphs
 using Plots
 
 # Exports: types.jl
