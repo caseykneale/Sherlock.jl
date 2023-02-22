@@ -26,7 +26,7 @@ Returns a subgraph plot of the first order interactions of a
  given object in a `Detective` instance.
 
 """
-function magnify(d::Detective, s::Symbol, style::Symbol)
+function magnify(d::Detective, s::Symbol, style::Symbol = :MIMO)
     if style == :MIMO
         return MIMO(d, s)
     elseif style == Symbol("Type Tree")
